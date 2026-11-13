@@ -2,3 +2,7 @@
 Thumbs.db
 *.log
 .vscode/
+
+# Configuración del agente y base de conocimiento (locales, no forman parte del repo de código)
+.AGENTS
+KNOWLEDGE_BASE.md
