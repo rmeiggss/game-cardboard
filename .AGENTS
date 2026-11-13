@@ -1,0 +1,58 @@
+# ROLE & OBJECTIVE
+Actúa como un Senior Mobile Game Developer y Arquitecto Frontend especialista en aplicaciones Web/PWA de alto rendimiento (HTML5 Canvas, Matter.js y Web APIs). 
+Tu objetivo es construir desde cero un juego y creador de niveles 100% OFFLINE para niños llamado **"Cardboard Tilt Maze" (Laberinto de Cartón)**.
+
+El juego debe simular con realismo táctil y visual que el usuario sostiene una caja de cartón física en sus manos, utilizando el giroscopio/acelerómetro real del teléfono para mover una canica dentro del laberinto que el propio niño ha dibujado.
+
+# POLÍTICA DE CONTROL DE VERSIONES Y DECISIONES (GIT WORKFLOW)
+- **Ramas:**
+  - `main`: Rama de versión de producción / Release oficial.
+  - `develop`: Rama base de desarrollo activo. Todos los desarrollos e implementaciones parten desde `develop`.
+- **Versionamiento:**
+  - El usuario indicará explícitamente cada vez que se realice un cambio si se debe versionar (hacer commit/tag/merge) o no. No realizar commits no autorizados.
+- **Registro de Decisiones Arquitectónicas:**
+  - Todos los cambios grandes de comportamiento, decisiones técnicas y arquitectónicas deben actualizarse y mantenerse documentados en este archivo `.AGENTS`.
+
+# RESTRICCIONES TÉCNICAS Y DE RENDIMIENTO (LOW-GPU / REALISMO LIGERO)
+1. **Cero Dependencias Externas / Zero-Third-Party:**
+   - PROHIBIDO usar Three.js, Babylon.js, WebGL complejo o CDNs externos. Todo el juego debe correr 100% offline.
+   - Gráficos mediante **HTML5 Canvas 2D con técnicas 2.5D (Faux-3D)**:
+     - Texturas procedurales en caché (`OffscreenCanvas`) simulando cartón corrugado Kraft (`#C89D7C`, `#B58863`, `#8C6239`).
+     - **Iluminación y Sombras Dinámicas 2.5D:** El vector de sombra (`shadowOffsetX`, `shadowOffsetY`) de las paredes de cartón y de la canica se desplaza en dirección opuesta a la inclinación del móvil.
+     - Canica con gradiente radial y brillo especular dinámico que se mueve según el ángulo del giroscopio.
+2. **100% Offline First:**
+   - Persistencia de niveles creados usando `localStorage`.
+3. **Físicas Sólidas a 60 FPS (Micro-motor Vanilla):**
+   - Motor de físicas 2D matemático integrado: integración de velocidad/fuerza gravitatoria proporcional a los ángulos de inclinación, fricción de rodadura, rebotes contra paredes de cartón y detección de caída en agujeros.
+
+# MECÁNICAS DE SENSORES (GIROSCOPIO REAL + FALLBACK)
+1. **Integración Nativa con Sensores:**
+   - Implementar `window.DeviceOrientationEvent` (`beta` para inclinación frontal/trasera, `gamma` para inclinación izquierda/derecha).
+   - Filtro de suavizado exponencial (**Low-Pass Filter**, factor `0.15`) para eliminar vibraciones bruscas (jitter).
+   - Ángulos máximos acotados a `[-35°, 35°]`.
+2. **Permisos y Calibración:**
+   - Botón amigable para gestionar el permiso en iOS (`DeviceOrientationEvent.requestPermission()`) y calibrar la posición actual como "Punto Cero (Plano)".
+3. **Fallback para Testing en PC / Escritorio:**
+   - Control simulado arrastrando el ratón o con teclas WASD / Direccionales que inclinan visual y físicamente la caja si no hay giroscopio.
+
+# FLUJO DE LA APLICACIÓN (2 MODOS PARA NIÑOS)
+1. **MODO CONSTRUCCIÓN ("Arma tu Caja"):**
+   - Grilla con snap para trazar tiras de cartón (paredes).
+   - Herramienta Sacabocados (agujeros trampa con profundidad).
+   - Herramienta Inicio (estrella) y Meta (agujero dorado).
+   - Borrador y Limpiar caja.
+   - Selector de Bolita: Canica de Acero, Pelota de Goma, Bolita de Plastilina (con físicas diferenciadas).
+   - Guardado local y galería de cajas creadas.
+2. **MODO JUEGO ("¡A Jugar!"):**
+   - Oculta UI de edición, marco de solapas de caja de cartón.
+   - Control directo por giroscopio / inclinación.
+   - **Audio Procedural (Web Audio API):** Choque contra cartón, rodamiento dinámico según velocidad, caída en agujero y fanfarria de victoria.
+   - Respuesta háptica con `navigator.vibrate(20)` en impactos fuertes.
+   - Confeti de papel recortado al ganar.
+
+# ESTRUCTURA DE ENTREGABLES
+1. `index.html`: Estructura viewport mobile-first, PWA ready.
+2. `styles.css`: Estética "Craft / Cartón", sombras realistas y UI infantil táctil.
+3. `sensors.js`: Giroscopio, calibración, filtro de suavizado y fallback de escritorio.
+4. `audio.js`: Sintetizador Web Audio API puro (100% offline).
+5. `game.js`: Motor Canvas 2.5D, física de colisiones, texturas procedurales, editor de niveles y 2 niveles precargados.
