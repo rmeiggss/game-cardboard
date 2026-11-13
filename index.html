@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cardboard Tilt Maze - Laberinto de Cartón (v0.1)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#A77B5A">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="appRoot">
+    <!-- Header Principal -->
+    <header class="craft-header">
+      <div class="brand-badge">
+        <span style="font-size: 1.2rem;">📦</span>
+        <span class="brand-title">Laberinto</span>
+        <span id="levelBadge" class="level-badge">Nivel 1</span>
+      </div>
+
+      <div class="header-actions">
+        <button id="btnPlay" class="craft-btn btn-primary hidden">
+          <span>▶️</span><span>¡Jugar!</span>
+        </button>
+        <button id="btnEdit" class="craft-btn btn-accent">
+          <span>✏️</span><span>Arma tu Caja</span>
+        </button>
+        <button id="btnCalibrate" class="craft-btn btn-secondary" title="Calibrar giroscopio">
+          <span>📐</span><span>Calibrar</span>
+        </button>
+        <button id="btnMute" class="craft-btn btn-secondary btn-icon-only" title="Silenciar">
+          <span>🔊</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Barra de Construcción -->
+    <section id="buildToolbar" class="build-toolbar hidden">
+      <div class="toolbar-row">
+        <div class="tool-group">
+          <button class="tool-btn active" data-tool="wall" title="Pared de cartón">
+            <span class="icon">🧱</span><span class="label">Pared</span>
+          </button>
+          <button class="tool-btn" data-tool="hole" title="Agujero trampa">
+            <span class="icon">🕳️</span><span class="label">Hoyo</span>
+          </button>
+          <button class="tool-btn" data-tool="start" title="Punto de inicio">
+            <span class="icon">⭐</span><span class="label">Inicio</span>
+          </button>
+          <button class="tool-btn" data-tool="goal" title="Meta dorada">
+            <span class="icon">🏆</span><span class="label">Meta</span>
+          </button>
+          <button class="tool-btn" data-tool="eraser" title="Borrar">
+            <span class="icon">🧹</span><span class="label">Borrar</span>
+          </button>
+        </div>
+
+        <div class="tool-group">
+          <button class="tool-btn active" data-marble="acero" title="Acero (Rápida y pesada)">
+            <div class="marble-preview marble-steel"></div><span class="label">Acero</span>
+          </button>
+          <button class="tool-btn" data-marble="goma" title="Goma (Rebota mucho)">
+            <div class="marble-preview marble-rubber"></div><span class="label">Goma</span>
+          </button>
+          <button class="tool-btn" data-marble="plastilina" title="Plastilina (Lenta y suave)">
+            <div class="marble-preview marble-clay"></div><span class="label">Plasti</span>
+          </button>
+        </div>
+
+        <div class="tool-group">
+          <button id="btnClear" class="craft-btn btn-secondary btn-icon-only" title="Limpiar caja">
+            <span>🗑️</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Área de Juego -->
+    <main class="game-viewport">
+      <canvas id="gameCanvas"></canvas>
+      <div class="pc-hint">🎮 En PC: arrastra con el ratón o usa las teclas WASD / Flechas para inclinar la caja</div>
+    </main>
+
+    <!-- Modal Victoria con Progresión de Nivel -->
+    <div id="victoryModal" class="modal-overlay hidden">
+      <div class="modal-craft-card">
+        <div class="victory-trophy">🏆✨</div>
+        <h2 class="modal-title">¡Caja Superada!</h2>
+        <p class="modal-desc">¡Llegaste a la meta dorada con éxito!</p>
+        <div class="modal-buttons">
+          <button id="btnNextLevel" class="craft-btn btn-primary" style="padding: 12px; font-size: 1rem;">
+            <span>🚀</span><span>¡Siguiente Nivel! ➡️</span>
+          </button>
+          <button id="btnPlayAgain" class="craft-btn btn-secondary">
+            <span>🔄</span><span>Repetir esta Caja</span>
+          </button>
+          <button id="btnBackToEdit" class="craft-btn btn-secondary">
+            <span>✏️</span><span>Editar Laberinto</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts modulares (KISS, cada archivo < 300 líneas) -->
+  <script src="audio.js"></script>
+  <script src="sensors.js"></script>
+  <script src="generator.js"></script>
+  <script src="physics.js"></script>
+  <script src="renderer.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
